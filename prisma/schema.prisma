@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String?
+  image     String?
+  role      Role     @default("USER")
+  status    String   @default("ACTIVE")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+  orders   Order[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  progress    Int      @default(0)
+  status      String   @default("ACTIVE")
+  dueDate     DateTime?
+  ownerId     String
+  owner       User     @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Order {
+  id        String   @id @default(cuid())
+  orderId   String   @unique
+  customer  String
+  amount    Float
+  status    String   @default("PENDING")
+  date      DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  value     Float
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+}
