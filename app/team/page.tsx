@@ -4,6 +4,8 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { prisma } from "@/lib/prisma"
 import { ShieldCheck, Clock, WifiOff } from "lucide-react"
 
+export const dynamic = "force-dynamic"
+
 export default async function TeamPage() {
   const users = await prisma.user.findMany({
     orderBy: { name: "asc" },

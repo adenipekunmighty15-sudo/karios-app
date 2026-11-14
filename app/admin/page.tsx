@@ -1,45 +1,60 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Navbar } from "@/components/layout/navbar"
 import { Sidebar } from "@/components/layout/sidebar"
-import { prisma } from "@/lib/prisma"
 import { DataTable } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/use-toast"
-import { saveAs } from "file-saver"
+
+interface UserRow {
+  id: string
+  name: string
+  email: string
+  role: string
+  status: string
+  createdAt?: string
+}
+
+interface TableRowData {
+  [key: string]: string | number
+  name: string
+  email: string
+  role: string
+  status: string
+  joined: string
+  userId: string
+}
 
 export default function AdminPage() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState<UserRow[]>([])
   const [loading, setLoading] = useState(true)
-  const { toast } = useToast()
   const [isAdmin, setIsAdmin] = useState(false)
+  const [adminName, setAdminName] = useState("Guest")
+  const { toast } = useToast()
 
-  // Check admin role on mount
+  // Check admin role on mount (client-only)
   useEffect(() => {
     const userStr = localStorage.getItem("kariosUser")
     if (userStr) {
-      const user = JSON.parse(userStr)
-      setIsAdmin(user.role === "ADMIN")
+      try {
+        const user = JSON.parse(userStr)
+        setIsAdmin(user.role === "ADMIN")
+        setAdminName(user.name || "Guest")
+      } catch {
+        setIsAdmin(false)
+      }
     }
   }, [])
 
-  useEffect(() => {
-    if (isAdmin) {
-      fetchUsers()
-    }
-  }, [isAdmin])
-
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true)
     try {
-      const res = await fetch("/api/users", {
-        cache: "no-store",
-      })
+      const res = await fetch("/api/users", { cache: "no-store" })
       if (!res.ok) throw new Error("Failed to fetch users")
       const data = await res.json()
-      setUsers(data.users)
+      setUsers(data.users || [])
     } catch (err) {
       console.error(err)
       toast({
@@ -50,14 +65,28 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
+  }, [toast])
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchUsers()
+    } else {
+      setLoading(false)
+    }
+  }, [isAdmin, fetchUsers])
+
+  const downloadSlip = (userId: string) => {
+    window.open(`/api/slip?userId=${encodeURIComponent(userId)}`, "_blank")
   }
 
-  // Initialize data on mount
-  useEffect(() => {
-    if (isAdmin || loading) {
-      fetchUsers()
-    }
-  }, [isAdmin, loading])
+  const tableData: TableRowData[] = users.map((u) => ({
+    name: u.name,
+    email: u.email,
+    role: u.role,
+    status: u.status,
+    joined: u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "-",
+    userId: u.id,
+  }))
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,9 +105,7 @@ export default function AdminPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-foreground">
-                    Logged in as: {localStorage.getItem("kariosUser")
-                      ? JSON.parse(localStorage.getItem("kariosUser") || "{}").name
-                      : "Guest"}
+                    Logged in as: {adminName}
                   </span>
                 </div>
               </div>
@@ -89,17 +116,14 @@ export default function AdminPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
-                    <DataTable
-                      columns={["Name", "Email", "Role", "Status", "Joined", "Actions"]}
-                      data={users.map((u) => ({
-                        name: u.name,
-                        email: u.email,
-                        role: u.role,
-                        status: u.status,
-                        joined: u.createdAt ? new Date(u.createdAt).toLocaleDateString() : "-",
-                        userId: u.id,
-                      }))}
-                    />
+                    {loading ? (
+                      <p className="text-sm text-muted-foreground py-4">Loading users...</p>
+                    ) : (
+                      <DataTable
+                        columns={["Name", "Email", "Role", "Status", "Joined"]}
+                        data={tableData}
+                      />
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -109,13 +133,13 @@ export default function AdminPage() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Download slips for registered users with their details.
                 </p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {users.map((user) => (
                     <Button
-                      key={user.userId}
+                      key={user.id}
                       variant="outline"
                       size="sm"
-                      onClick={() => downloadSlip(user.userId)}
+                      onClick={() => downloadSlip(user.id)}
                     >
                       Download Slip for {user.name}
                     </Button>
@@ -134,25 +158,19 @@ export default function AdminPage() {
             </p>
             <Button
               onClick={() => {
-                // Simulate login as admin
-                localStorage.setItem("kariosUser", JSON.stringify({
-                  name: "Admin User",
-                  email: "admin@karios.com",
-                  role: "ADMIN",
-                }))
+                localStorage.setItem(
+                  "kariosUser",
+                  JSON.stringify({
+                    name: "Admin User",
+                    email: "admin@karios.com",
+                    role: "ADMIN",
+                  })
+                )
                 window.location.reload()
               }}
-              variant="primary"
             >
               Login as Admin
             </Button>
-          </div>
-        </div>
-      )}
-      {loading && (
-        <div className="min-h-screen bg-background p-6">
-          <div className="flex align-items-center justify-center h-64">
-            <span className="text-muted-foreground">Loading users...</span>
           </div>
         </div>
       )}

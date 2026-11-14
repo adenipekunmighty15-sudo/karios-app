@@ -8,6 +8,8 @@ import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 export default async function SettingsPage() {
   const users = await prisma.user.findMany({
     orderBy: { name: "asc" },

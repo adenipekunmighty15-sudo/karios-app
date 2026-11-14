@@ -7,8 +7,8 @@ import { Link } from "@/components/ui/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card"
-import { Mail, Lock, GitHub, Google } from "lucide-react"
+import { Card, CardHeader, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card"
+import { Mail, Lock, Globe } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 
 export default function LoginPage() {
@@ -108,11 +108,11 @@ export default function LoginPage() {
           </div>
           <div className="flex flex-col gap-3">
             <Button variant="outline" className="w-full" onClick={() => {}}>
-              <GitHub className="w-4 h-4 mr-2" />
+              <Globe className="w-4 h-4 mr-2" />
               GitHub
             </Button>
             <Button variant="outline" className="w-full" onClick={() => {}}>
-              <Google className="w-4 h-4 mr-2" />
+              <Globe className="w-4 h-4 mr-2" />
               Google
             </Button>
           </div>

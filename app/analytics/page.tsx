@@ -2,18 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Navbar } from "@/components/layout/navbar"
 import { Sidebar } from "@/components/layout/sidebar"
 import { prisma } from "@/lib/prisma"
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  BarChart,
-  Bar,
-} from "recharts"
+import { RevenueChart, OrdersChart } from "@/components/analytics-charts"
+
+export const dynamic = "force-dynamic"
 
 export default async function AnalyticsPage() {
   const events = await prisma.analyticsEvent.findMany({
@@ -64,21 +55,7 @@ export default async function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className="h-72 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={revenueData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line
-                        type="monotone"
-                        dataKey="revenue"
-                        stroke="hsl(var(--primary))"
-                        strokeWidth={2}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <RevenueChart data={revenueData} />
                 </div>
               </CardContent>
             </Card>
@@ -89,20 +66,7 @@ export default async function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className="h-72 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={ordersData}>
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar
-                        dataKey="orders"
-                        fill="hsl(var(--secondary))"
-                        radius={[4, 4, 0, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <OrdersChart data={ordersData} />
                 </div>
               </CardContent>
             </Card>

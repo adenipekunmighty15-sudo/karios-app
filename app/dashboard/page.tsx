@@ -5,6 +5,8 @@ import { Sidebar } from "@/components/layout/sidebar"
 import { DollarSign, User, Package, TrendingUp } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 
+export const dynamic = "force-dynamic"
+
 export default async function DashboardPage() {
   const [totalRevenue, activeUsers, totalOrders, recentOrders] =
     await Promise.all([
@@ -42,28 +44,28 @@ export default async function DashboardPage() {
     {
       title: "Total Revenue",
       value: `$${Number(totalRevenue._sum.amount || 0).toLocaleString()}`,
-      trend: revenueChange >= 0 ? "up" : "down",
+      trend: (revenueChange >= 0 ? "up" : "down") as "up" | "down",
       trendValue: `${Math.abs(revenueChange)}%`,
       icon: <DollarSign className="w-5 h-5" />,
     },
     {
       title: "Active Users",
       value: activeUsers.toLocaleString(),
-      trend: "up",
+      trend: "up" as const,
       trendValue: "3.2%",
       icon: <User className="w-5 h-5" />,
     },
     {
       title: "Orders",
       value: totalOrders.toLocaleString(),
-      trend: "down",
+      trend: "down" as const,
       trendValue: "2.1%",
       icon: <Package className="w-5 h-5" />,
     },
     {
       title: "Conversion Rate",
       value: "4.2%",
-      trend: "up",
+      trend: "up" as const,
       trendValue: "0.4%",
       icon: <TrendingUp className="w-5 h-5" />,
     },

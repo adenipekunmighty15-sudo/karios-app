@@ -1,7 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { ToastAction, ToastProps } from "@/components/ui/toaster"
+
+export interface ToastProps {
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  variant?: "default" | "destructive"
+}
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000

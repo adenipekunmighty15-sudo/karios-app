@@ -4,11 +4,13 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  leftIcon?: React.ReactNode
+}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, ...props }, ref) => {
-    return (
+  ({ className, type, leftIcon, ...props }, ref) => {
+    const input = (
       <input
         type={type}
         className={cn(
@@ -18,6 +20,17 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         ref={ref}
         {...props}
       />
+    )
+
+    if (!leftIcon) return input
+
+    return (
+      <div className="relative w-full">
+        <span className="pointer-events-none absolute left-3 top-1/2 flex -translate-y-1/2 items-center">
+          {leftIcon}
+        </span>
+        {input}
+      </div>
     )
   }
 )
