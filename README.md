@@ -1,61 +1,37 @@
-# KAIROS Registration Website
+# Karios App
 
-A responsive event registration landing page for **KAIROS — God’s Appointed Time**, organized by the McPherson University Chapel of Praise.
+This repository contains two projects.
 
-- Event: 28 November 2026
-- Time: 8:00 AM–4:00 PM, West Africa Time
-- Venue: Stephen and Hannah Obaro Hall, McPherson University
-- Registration: https://forms.gle/SD2RkfVTwZcWujkw5
+## 1. Karios Dashboard — `frontend/` + `backend/`
 
-## Project structure
+A full-stack SaaS dashboard built with Next.js 14 (App Router), React 18, Prisma and Tailwind CSS.
 
 ```
-karios app/
-├── frontend/     # Next.js app: pages, components, UI utils, config, app/api routes
-└── backend/      # Data layer: Prisma schema, database, migrations, seed & scripts
+frontend/   # Next.js app: pages, components, UI utils, config, app/api route handlers
+backend/    # Data layer: Prisma schema, database, migrations, seed and scripts
 ```
 
-- See [`frontend/README.md`](frontend/README.md) and [`backend/README.md`](backend/README.md) for details.
-- Next.js requires API route handlers to stay in `frontend/app/api/`; they call the data layer in `backend/`.
-
-## Commands
-
-Run from the project root:
+Run it from the repository root:
 
 ```bash
-npm run dev          # start the app at http://localhost:3000
-npm run build        # production build
-npm run start        # serve the production build
-npm run lint         # lint the frontend
-npm run db:generate  # generate Prisma Client
-npm run db:push      # push schema to database
-npm run db:seed      # seed the database
-npm run db:studio    # open Prisma Studio
-npm run verify:db    # verify database contents
+npm install
+npm run dev
 ```
 
-Copy `.env.example` to `frontend/.env` (or set the environment variables in your deployment platform) before running database commands.
+Other commands: `npm run build`, `npm run start`, `npm run lint`, `npm run db:generate`, `npm run db:push`, `npm run db:seed`, `npm run db:studio`, `npm run verify:db`.
 
-## Features
+Copy `.env.example` to `frontend/.env` (or set the environment variables in your deployment platform) before using the database.
 
-| Feature | Description |
-| --- | --- |
-| Authentication | Role-based login. Regular users use email/password; `admin@karios.com` accesses the admin panel. Session stored in `localStorage`. |
-| Dashboard | Statistic cards, recent orders table, and quick actions. |
-| Admin Panel | Admin-only user management, PDF slip generation, admin status display. |
-| Projects | Project tracking with status filters, progress, due dates, and owners. |
-| Team | Team members with active/away/offline status indicators. |
-| Slip Generation | `GET /api/slip?userId=...` returns a printable payment slip. |
+## 2. KAIROS Registration Site — `kairos-registration/`
 
-## Technology stack
+A single-page event registration website for **KAIROS — God's Appointed Time** (McPherson University Prays), built with React 19, TypeScript, Vite and Tailwind CSS 4 with custom glassmorphism styling. It includes a live countdown, the official event content, and links to the Google Form.
 
-- **Framework:** Next.js 14 App Router, React 18, TypeScript
-- **Database:** Prisma ORM (PostgreSQL)
-- **Styling:** Tailwind CSS with shadcn-style components, Radix UI primitives
-- **Forms:** React Hook Form + Zod
-- **Charts:** Recharts
-- **Notifications:** sonner
+Run it from its own folder:
 
-## Pages
+```bash
+cd kairos-registration
+npm install
+npm run dev
+```
 
-- `/` dashboard, `/login`, `/admin`, `/projects`, `/team`, `/analytics`, `/settings`
+Build with `npm run build`. See [`kairos-registration/README.md`](kairos-registration/README.md) for details on changing the registration link, event date, colours and flyer image.
