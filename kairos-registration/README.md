@@ -16,9 +16,10 @@ Then open the URL Vite prints (usually http://localhost:5173).
 
 | Change | Where |
 | --- | --- |
-| Registration link | `REGISTRATION_URL` near the top of `src/App.tsx` — updates every button and the embedded form |
+| Registration link | `REGISTRATION_URL` near the top of `src/App.tsx` — updates the official-form fallback link |
 | Countdown / event date | `EVENT_START` near the top of `src/App.tsx` |
-| Event wording | `src/App.tsx` (hero, about, details, scripture, registration sections) |
+| Speaker names & bios | `SPEAKERS` array near the top of `src/App.tsx` |
+| Event wording | `src/App.tsx` (hero, about, speakers, details, scripture, registration sections) |
 | Colours & glass effects | CSS variables at the top of `src/index.css` |
 
 ## Flyer image
@@ -28,6 +29,13 @@ The site includes a designed poster fallback. To use the official flyer instead:
 1. Save the flyer as `public/kairos-flyer.jpg`.
 2. It will automatically replace the fallback — no code changes needed.
 
-## Google Form
+## Registration form
 
-The external Google Form itself cannot be restyled from this codebase (Google controls its markup). The site wraps it in a glassmorphic card with an event-styled background, heading and status indicator, plus a fallback link in case embedding is blocked. All buttons point to the same URL in `REGISTRATION_URL`.
+Registration buttons scroll to the branded form in the **Register** section instead of leaving the site, so the form uses the same blue/orange background and glass styling as the rest of the app. The form submits directly to the official Google Form (`FORM_ENDPOINT` in `src/App.tsx`) using its question IDs, so responses still appear in the same Google Sheet/form responses.
+
+- `REGISTRATION_URL` is kept as an "official Google Form" fallback link for anyone who prefers it.
+- If the form questions ever change in Google Forms, the `entry.*` field names in `src/App.tsx` must be updated to match.
+
+## Speakers
+
+The Speakers section is powered by the `SPEAKERS` array at the top of `src/App.tsx`. Replace the placeholder names, roles and bios there — no other changes are needed.
