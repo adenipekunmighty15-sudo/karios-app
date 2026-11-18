@@ -1,17 +1,18 @@
 {
-  "name": "karios-dashboard",
+  "name": "kairos-registration",
   "version": "1.0.0",
   "private": true,
   "description": "Modern SaaS Dashboard - Karios (Full-stack, no mock data)",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "dev": "next dev frontend",
+    "build": "next build frontend",
+    "start": "next start frontend",
+    "lint": "next lint frontend",
+    "db:generate": "prisma generate --schema=backend/prisma/schema.prisma",
+    "db:push": "prisma db push --schema=backend/prisma/schema.prisma",
+    "db:seed": "tsx backend/prisma/seed.ts",
+    "db:studio": "prisma studio --schema=backend/prisma/schema.prisma",
+    "verify:db": "node backend/scripts/verify-db.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
